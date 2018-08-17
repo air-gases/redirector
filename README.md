@@ -28,7 +28,9 @@ import (
 )
 
 func main() {
-	air.Gases = []air.Gas{redirector.WWW2NonWWWGas}
+	air.Gases = []air.Gas{
+		redirector.WWW2NonWWWGas(redirector.WWW2NonWWWGasConfig{}),
+	}
 	air.GET("/", func(req *air.Request, res *air.Response) error {
 		return res.String("Absolutely non-www.")
 	})
@@ -47,7 +49,9 @@ import (
 )
 
 func main() {
-	air.Gases = []air.Gas{redirector.NonWWW2WWWGas}
+	air.Gases = []air.Gas{
+		redirector.NonWWW2WWWGas(redirector.NonWWW2WWWGasConfig{}),
+	}
 	air.GET("/", func(req *air.Request, res *air.Response) error {
 		return res.String("Absolutely www.")
 	})
