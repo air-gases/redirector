@@ -3,7 +3,7 @@ package redirector
 import (
 	"strings"
 
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 // WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas()`.

@@ -1,7 +1,7 @@
 # Redirector
 
 A useful gas that used to redirect unintended requests for the web applications
-built using [Air](https://github.com/sheng/air).
+built using [Air](https://github.com/aofei/air).
 
 ## Installation
 
@@ -24,7 +24,7 @@ package main
 
 import (
 	"github.com/air-gases/redirector"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func main() {
@@ -45,7 +45,7 @@ package main
 
 import (
 	"github.com/air-gases/redirector"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func main() {
