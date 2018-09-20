@@ -32,7 +32,7 @@ func main() {
 		redirector.WWW2NonWWWGas(redirector.WWW2NonWWWGasConfig{}),
 	}
 	air.GET("/", func(req *air.Request, res *air.Response) error {
-		return res.String("Absolutely non-www.")
+		return res.WriteString("Absolutely non-www.")
 	})
 	air.Serve()
 }
@@ -53,7 +53,7 @@ func main() {
 		redirector.NonWWW2WWWGas(redirector.NonWWW2WWWGasConfig{}),
 	}
 	air.GET("/", func(req *air.Request, res *air.Response) error {
-		return res.String("Absolutely www.")
+		return res.WriteString("Absolutely www.")
 	})
 	air.Serve()
 }
