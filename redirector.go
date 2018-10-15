@@ -2,6 +2,7 @@ package redirector
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	"github.com/aofei/air"
@@ -55,31 +56,36 @@ func NonWWW2WWWGas(nw2wgc WWW2NonWWWGasConfig) air.Gas {
 	}
 }
 
-// OneAuthorityGasConfig is a set of configurations for the `OneAuthorityGas()`.
-type OneAuthorityGasConfig struct {
-	Authority string
+// OneHostnameGasConfig is a set of configurations for the `OneHostnameGas()`.
+type OneHostnameGasConfig struct {
+	Hostname string
 }
 
-// OneAuthorityGas returns an `air.Gas` that is used to ensure that there is
-// only one authority.
-func OneAuthorityGas(oagc OneAuthorityGasConfig) air.Gas {
+// OneHostnameGas returns an `air.Gas` that is used to ensure that there is only
+// one hostname.
+func OneHostnameGas(oagc OneHostnameGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			authority := oagc.Authority
-			if authority == "" {
-				if len(air.AuthorityWhitelist) == 0 {
+			hostname := oagc.Hostname
+			if hostname == "" {
+				if len(air.HostnameWhitelist) == 0 {
 					return next(req, res)
 				}
 
-				authority = air.AuthorityWhitelist[0]
+				hostname = air.HostnameWhitelist[0]
 			}
 
-			if req.Authority != authority {
+			hn, _, err := net.SplitHostPort(req.Authority)
+			if err != nil {
+				hn = req.Authority
+			}
+
+			if hn != hostname {
 				res.Status = 301
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
 					req.Scheme,
-					authority,
+					hostname,
 					req.Path,
 				))
 			}
