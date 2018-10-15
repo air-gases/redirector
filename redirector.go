@@ -54,3 +54,37 @@ func NonWWW2WWWGas(nw2wgc WWW2NonWWWGasConfig) air.Gas {
 		}
 	}
 }
+
+// OneAuthorityGasConfig is a set of configurations for the `OneAuthorityGas()`.
+type OneAuthorityGasConfig struct {
+	Authority string
+}
+
+// OneAuthorityGas returns an `air.Gas` that is used to ensure that there is
+// only one authority.
+func OneAuthorityGas(oagc OneAuthorityGasConfig) air.Gas {
+	return func(next air.Handler) air.Handler {
+		return func(req *air.Request, res *air.Response) error {
+			authority := oagc.Authority
+			if authority == "" {
+				if len(air.AuthorityWhitelist) == 0 {
+					return next(req, res)
+				}
+
+				authority = air.AuthorityWhitelist[0]
+			}
+
+			if req.Authority != authority {
+				res.Status = 301
+				return res.Redirect(fmt.Sprintf(
+					"%s://%s%s",
+					req.Scheme,
+					authority,
+					req.Path,
+				))
+			}
+
+			return next(req, res)
+		}
+	}
+}
