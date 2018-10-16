@@ -56,23 +56,23 @@ func NonWWW2WWWGas(nw2wgc WWW2NonWWWGasConfig) air.Gas {
 	}
 }
 
-// OneHostnameGasConfig is a set of configurations for the `OneHostnameGas()`.
-type OneHostnameGasConfig struct {
-	Hostname string
+// OneHostGasConfig is a set of configurations for the `OneHostGas()`.
+type OneHostGasConfig struct {
+	Host string
 }
 
-// OneHostnameGas returns an `air.Gas` that is used to ensure that there is only
-// one hostname.
-func OneHostnameGas(oagc OneHostnameGasConfig) air.Gas {
+// OneHostGas returns an `air.Gas` that is used to ensure that there is only one
+// host.
+func OneHostGas(oagc OneHostGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			hostname := oagc.Hostname
-			if hostname == "" {
-				if len(air.HostnameWhitelist) == 0 {
+			host := oagc.Host
+			if host == "" {
+				if len(air.HostWhitelist) == 0 {
 					return next(req, res)
 				}
 
-				hostname = air.HostnameWhitelist[0]
+				host = air.HostWhitelist[0]
 			}
 
 			hn, _, err := net.SplitHostPort(req.Authority)
@@ -80,12 +80,12 @@ func OneHostnameGas(oagc OneHostnameGasConfig) air.Gas {
 				hn = req.Authority
 			}
 
-			if hn != hostname {
+			if hn != host {
 				res.Status = 301
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
 					req.Scheme,
-					hostname,
+					host,
 					req.Path,
 				))
 			}
