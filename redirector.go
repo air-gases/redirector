@@ -68,11 +68,11 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 		return func(req *air.Request, res *air.Response) error {
 			host := oagc.Host
 			if host == "" {
-				if len(air.HostWhitelist) == 0 {
+				if len(req.Air.HostWhitelist) == 0 {
 					return next(req, res)
 				}
 
-				host = air.HostWhitelist[0]
+				host = req.Air.HostWhitelist[0]
 			}
 
 			hn, _, err := net.SplitHostPort(req.Authority)
