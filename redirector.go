@@ -3,6 +3,7 @@ package redirector
 import (
 	"fmt"
 	"net"
+	"net/http"
 	"strings"
 
 	"github.com/aofei/air"
@@ -18,7 +19,7 @@ func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
 			if strings.HasPrefix(req.Authority, "www.") {
-				res.Status = 301
+				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
 					req.Scheme,
@@ -42,7 +43,7 @@ func NonWWW2WWWGas(nw2wgc WWW2NonWWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
 			if !strings.HasPrefix(req.Authority, "www.") {
-				res.Status = 301
+				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://www.%s%s",
 					req.Scheme,
@@ -81,7 +82,7 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 			}
 
 			if hn != host {
-				res.Status = 301
+				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
 					req.Scheme,
