@@ -39,7 +39,7 @@ type NonWWW2WWWGasConfig struct {
 
 // NonWWW2WWWGas returns an `air.Gas` that is used to redirect non-www requests
 // to www.
-func NonWWW2WWWGas(nw2wgc WWW2NonWWWGasConfig) air.Gas {
+func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
 			if !strings.HasPrefix(req.Authority, "www.") {

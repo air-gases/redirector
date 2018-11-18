@@ -28,13 +28,14 @@ import (
 )
 
 func main() {
-	air.Pregases = []air.Gas{
+	a := air.Default
+	a.Pregases = []air.Gas{
 		redirector.WWW2NonWWWGas(redirector.WWW2NonWWWGasConfig{}),
 	}
-	air.GET("/", func(req *air.Request, res *air.Response) error {
+	a.GET("/", func(req *air.Request, res *air.Response) error {
 		return res.WriteString("Absolutely non-www.")
 	})
-	air.Serve()
+	a.Serve()
 }
 ```
 
@@ -49,13 +50,14 @@ import (
 )
 
 func main() {
-	air.Gases = []air.Gas{
+	a := air.Default
+	a.Gases = []air.Gas{
 		redirector.NonWWW2WWWGas(redirector.NonWWW2WWWGasConfig{}),
 	}
-	air.GET("/", func(req *air.Request, res *air.Response) error {
+	a.GET("/", func(req *air.Request, res *air.Response) error {
 		return res.WriteString("Absolutely www.")
 	})
-	air.Serve()
+	a.Serve()
 }
 ```
 
