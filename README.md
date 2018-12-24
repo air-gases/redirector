@@ -29,6 +29,7 @@ import (
 
 func main() {
 	a := air.Default
+	a.DebugMode = true
 	a.Pregases = []air.Gas{
 		redirector.WWW2NonWWWGas(redirector.WWW2NonWWWGasConfig{}),
 	}
@@ -51,6 +52,7 @@ import (
 
 func main() {
 	a := air.Default
+	a.DebugMode = true
 	a.Gases = []air.Gas{
 		redirector.NonWWW2WWWGas(redirector.NonWWW2WWWGasConfig{}),
 	}
