@@ -76,12 +76,12 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 				host = req.Air.HostWhitelist[0]
 			}
 
-			hn, _, err := net.SplitHostPort(req.Authority)
-			if err != nil {
-				hn = req.Authority
+			h, _, _ := net.SplitHostPort(req.Authority)
+			if h == "" {
+				h = req.Authority
 			}
 
-			if hn != host {
+			if h != host && net.ParseIP(h) == nil {
 				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
