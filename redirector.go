@@ -9,7 +9,7 @@ import (
 	"github.com/aofei/air"
 )
 
-// WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas()`.
+// WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas`.
 type WWW2NonWWWGasConfig struct {
 }
 
@@ -33,7 +33,7 @@ func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 	}
 }
 
-// NonWWW2WWWGasConfig is a set of configurations for the `NonWWW2WWWGas()`.
+// NonWWW2WWWGasConfig is a set of configurations for the `NonWWW2WWWGas`.
 type NonWWW2WWWGasConfig struct {
 }
 
@@ -57,7 +57,7 @@ func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 	}
 }
 
-// OneHostGasConfig is a set of configurations for the `OneHostGas()`.
+// OneHostGasConfig is a set of configurations for the `OneHostGas`.
 type OneHostGasConfig struct {
 	Host string
 }
