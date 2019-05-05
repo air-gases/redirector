@@ -67,17 +67,17 @@ func main() {
 
 ## Community
 
-If you want to discuss this gas, or ask questions about it, simply post
+If you want to discuss Redirector, or ask questions about it, simply post
 questions or ideas [here](https://github.com/air-gases/redirector/issues).
 
 ## Contributing
 
-If you want to help build this gas, simply follow
+If you want to help build Redirector, simply follow
 [this](https://github.com/air-gases/redirector/wiki/Contributing) to send pull
 requests [here](https://github.com/air-gases/redirector/pulls).
 
 ## License
 
-This gas is licensed under the Unlicense.
+This project is licensed under the Unlicense.
 
 License can be found [here](LICENSE).
