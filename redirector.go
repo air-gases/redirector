@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/aofei/air"
+	"golang.org/x/net/idna"
 )
 
 // WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas`.
@@ -18,7 +19,10 @@ type WWW2NonWWWGasConfig struct {
 func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			if strings.HasPrefix(req.Authority, "www.") {
+			if strings.HasPrefix(
+				strings.ToLower(req.Authority),
+				"www.",
+			) {
 				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
@@ -42,7 +46,10 @@ type NonWWW2WWWGasConfig struct {
 func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			if !strings.HasPrefix(req.Authority, "www.") {
+			if !strings.HasPrefix(
+				strings.ToLower(req.Authority),
+				"www.",
+			) {
 				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://www.%s%s",
@@ -65,15 +72,22 @@ type OneHostGasConfig struct {
 // OneHostGas returns an `air.Gas` that is used to ensure that there is only one
 // host.
 func OneHostGas(oagc OneHostGasConfig) air.Gas {
+	if h, err := idna.Lookup.ToASCII(oagc.Host); err == nil {
+		oagc.Host = h
+	}
+
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			host := oagc.Host
-			if host == "" {
-				if len(req.Air.HostWhitelist) == 0 {
-					return next(req, res)
+			if oagc.Host == "" && len(req.Air.HostWhitelist) > 0 {
+				if h, err := idna.Lookup.ToASCII(
+					req.Air.HostWhitelist[0],
+				); err == nil {
+					oagc.Host = h
 				}
+			}
 
-				host = req.Air.HostWhitelist[0]
+			if oagc.Host == "" {
+				return next(req, res)
 			}
 
 			h, _, _ := net.SplitHostPort(req.Authority)
@@ -81,12 +95,17 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 				h = req.Authority
 			}
 
-			if h != host && net.ParseIP(h) == nil {
+			h, err := idna.Lookup.ToASCII(h)
+			if err != nil {
+				return err
+			}
+
+			if h != oagc.Host {
 				res.Status = http.StatusMovedPermanently
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
 					req.Scheme,
-					host,
+					oagc.Host,
 					req.Path,
 				))
 			}
