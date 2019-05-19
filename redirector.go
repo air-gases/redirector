@@ -78,14 +78,6 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
-			if oagc.Host == "" && len(req.Air.HostWhitelist) > 0 {
-				if h, err := idna.Lookup.ToASCII(
-					req.Air.HostWhitelist[0],
-				); err == nil {
-					oagc.Host = h
-				}
-			}
-
 			if oagc.Host == "" {
 				return next(req, res)
 			}
