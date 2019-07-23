@@ -12,6 +12,7 @@ import (
 
 // WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas`.
 type WWW2NonWWWGasConfig struct {
+	Skippable func(*air.Request, *air.Response) bool
 }
 
 // WWW2NonWWWGas returns an `air.Gas` that is used to redirect www requests to
@@ -19,6 +20,11 @@ type WWW2NonWWWGasConfig struct {
 func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
+			if w2nwgc.Skippable != nil &&
+				w2nwgc.Skippable(req, res) {
+				return next(req, res)
+			}
+
 			if strings.HasPrefix(
 				strings.ToLower(req.Authority),
 				"www.",
@@ -39,6 +45,7 @@ func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 
 // NonWWW2WWWGasConfig is a set of configurations for the `NonWWW2WWWGas`.
 type NonWWW2WWWGasConfig struct {
+	Skippable func(*air.Request, *air.Response) bool
 }
 
 // NonWWW2WWWGas returns an `air.Gas` that is used to redirect non-www requests
@@ -46,6 +53,11 @@ type NonWWW2WWWGasConfig struct {
 func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
+			if nw2wgc.Skippable != nil &&
+				nw2wgc.Skippable(req, res) {
+				return next(req, res)
+			}
+
 			if !strings.HasPrefix(
 				strings.ToLower(req.Authority),
 				"www.",
@@ -67,6 +79,8 @@ func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 // OneHostGasConfig is a set of configurations for the `OneHostGas`.
 type OneHostGasConfig struct {
 	Host string
+
+	Skippable func(*air.Request, *air.Response) bool
 }
 
 // OneHostGas returns an `air.Gas` that is used to ensure that there is only one
@@ -78,6 +92,10 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 
 	return func(next air.Handler) air.Handler {
 		return func(req *air.Request, res *air.Response) error {
+			if oagc.Skippable != nil && oagc.Skippable(req, res) {
+				return next(req, res)
+			}
+
 			if oagc.Host == "" {
 				return next(req, res)
 			}
