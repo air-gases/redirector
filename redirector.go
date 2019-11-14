@@ -12,6 +12,8 @@ import (
 
 // WWW2NonWWWGasConfig is a set of configurations for the `WWW2NonWWWGas`.
 type WWW2NonWWWGasConfig struct {
+	HTTPSEnforced bool
+
 	Skippable func(*air.Request, *air.Response) bool
 }
 
@@ -30,9 +32,15 @@ func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 				"www.",
 			) {
 				res.Status = http.StatusMovedPermanently
+
+				scheme := req.Scheme
+				if w2nwgc.HTTPSEnforced {
+					scheme = "https"
+				}
+
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
-					req.Scheme,
+					scheme,
 					req.Authority[4:],
 					req.Path,
 				))
@@ -45,6 +53,8 @@ func WWW2NonWWWGas(w2nwgc WWW2NonWWWGasConfig) air.Gas {
 
 // NonWWW2WWWGasConfig is a set of configurations for the `NonWWW2WWWGas`.
 type NonWWW2WWWGasConfig struct {
+	HTTPSEnforced bool
+
 	Skippable func(*air.Request, *air.Response) bool
 }
 
@@ -63,9 +73,15 @@ func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 				"www.",
 			) {
 				res.Status = http.StatusMovedPermanently
+
+				scheme := req.Scheme
+				if nw2wgc.HTTPSEnforced {
+					scheme = "https"
+				}
+
 				return res.Redirect(fmt.Sprintf(
 					"%s://www.%s%s",
-					req.Scheme,
+					scheme,
 					req.Authority,
 					req.Path,
 				))
@@ -78,7 +94,8 @@ func NonWWW2WWWGas(nw2wgc NonWWW2WWWGasConfig) air.Gas {
 
 // OneHostGasConfig is a set of configurations for the `OneHostGas`.
 type OneHostGasConfig struct {
-	Host string
+	Host          string
+	HTTPSEnforced bool
 
 	Skippable func(*air.Request, *air.Response) bool
 }
@@ -112,9 +129,15 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 
 			if h != oagc.Host {
 				res.Status = http.StatusMovedPermanently
+
+				scheme := req.Scheme
+				if oagc.HTTPSEnforced {
+					scheme = "https"
+				}
+
 				return res.Redirect(fmt.Sprintf(
 					"%s://%s%s",
-					req.Scheme,
+					scheme,
 					oagc.Host,
 					req.Path,
 				))
