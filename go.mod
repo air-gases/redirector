@@ -3,6 +3,6 @@ module github.com/air-gases/redirector
 go 1.13
 
 require (
-	github.com/aofei/air v0.13.2
-	golang.org/x/net v0.0.0-20191011234655-491137f69257
+	github.com/aofei/air v0.13.3
+	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 )
