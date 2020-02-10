@@ -117,13 +117,12 @@ func OneHostGas(oagc OneHostGasConfig) air.Gas {
 				return next(req, res)
 			}
 
-			h, _, _ := net.SplitHostPort(req.Authority)
-			if h == "" {
+			h, _, err := net.SplitHostPort(req.Authority)
+			if err != nil {
 				h = req.Authority
 			}
 
-			h, err := idna.Lookup.ToASCII(h)
-			if err != nil {
+			if h, err = idna.Lookup.ToASCII(h); err != nil {
 				return err
 			}
 
