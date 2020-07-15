@@ -1,6 +1,6 @@
 # Redirector
 
-[![GoDoc](https://godoc.org/github.com/air-gases/redirector?status.svg)](https://godoc.org/github.com/air-gases/redirector)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/air-gases/redirector)](https://pkg.go.dev/github.com/air-gases/redirector)
 
 A useful gas that used to redirect unintended requests for the web applications
 built using [Air](https://github.com/aofei/air).
