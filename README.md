@@ -78,6 +78,6 @@ requests [here](https://github.com/air-gases/redirector/pulls).
 
 ## License
 
-This project is licensed under the Unlicense.
+This project is licensed under the MIT License.
 
 License can be found [here](LICENSE).
